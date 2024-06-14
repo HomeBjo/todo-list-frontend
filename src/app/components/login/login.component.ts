@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,27 +12,16 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent {
   username: string = '';
   password: string = '';
+  constructor(private as:AuthService) {}
 
-  login() {
-    const myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('Cookie', 'csrftoken=YBh8sJSVxSduX8YzoE1Xdm8gLvvM76vx');
+  async login() {
 
-    const raw = JSON.stringify({
-      username: 'bjoern',
-      password: '123456',
-    });
-
-    const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow',
-    };
-
-    fetch('http://127.0.0.1:8000/login/', requestOptions)
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
+    try {
+      let resp = await this.as.loginWithUsernameAndPassword(this.username,this.password)
+      console.log('response', resp)
+      // todo: redirect
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
