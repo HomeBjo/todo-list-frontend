@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   username: string = '';
   password: string = '';
-  constructor(private as:AuthService) {}
+  constructor(private as:AuthService, private router : Router ) {}
 
   async login() {
 
@@ -20,7 +21,9 @@ export class LoginComponent {
       let resp = await this.as.loginWithUsernameAndPassword(this.username,this.password)
       console.log('response', resp)
       // todo: redirect
+      this.router.navigateByUrl('/todos')
     } catch (e) {
+      alert('falscher login')
       console.error(e);
     }
   }
