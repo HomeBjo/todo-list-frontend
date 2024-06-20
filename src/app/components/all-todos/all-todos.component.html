@@ -3,3 +3,11 @@
    <input type="checkbox" [checked]="todo.my_field">
     {{todo.title}}
 </div>
+<div>
+    <h3>Neues Todo hinzufügen</h3>
+    <form (ngSubmit)="createTodo()">
+      <input type="text" [(ngModel)]="newTodo.title" placeholder="Titel" name="title" required>
+      <input type="checkbox" [(ngModel)]="newTodo.my_field" name="my_field"> Erledigt
+      <button type="submit">Hinzufügen</button>
+    </form>
+  </div>
