@@ -1,13 +1,24 @@
-<h1>{{error}}</h1>
-<div *ngFor="let todo of todos" >
-   <input type="checkbox" [checked]="todo.my_field">
-    {{todo.title}}
-</div>
 <div>
-    <h3>Neues Todo hinzufügen</h3>
-    <form (ngSubmit)="createTodo()">
-      <input type="text" [(ngModel)]="newTodo.title" placeholder="Titel" name="title" required>
-      <input type="checkbox" [(ngModel)]="newTodo.my_field" name="my_field"> Erledigt
-      <button type="submit">Hinzufügen</button>
-    </form>
-  </div>
+  <h3>Todos</h3>
+  <ul>
+    <li *ngFor="let todo of todos; let i = index">
+      <input type="checkbox" [(ngModel)]="todo.my_field"> {{ todo.title }}
+      <button (click)="editTodo(i)">Ändern</button>
+      <button (click)="deleteTodo(todo.id)">Löschen</button>
+    </li>
+  </ul>
+
+  <h3>Neues Todo hinzufügen</h3>
+  <form (ngSubmit)="createTodo()">
+    <input type="text" [(ngModel)]="newTodo.title" placeholder="Titel" name="title" required>
+    <input type="checkbox" [(ngModel)]="newTodo.my_field" name="my_field"> Erledigt
+    <button type="submit">Hinzufügen</button>
+  </form>
+
+  <h3 *ngIf="editingTodo">Todo ändern</h3>
+  <form *ngIf="editingTodo" (ngSubmit)="updateTodo()">
+    <input type="text" [(ngModel)]="editingTodo.title" placeholder="Titel" name="title" required>
+    <input type="checkbox" [(ngModel)]="editingTodo.my_field" name="my_field"> Erledigt
+    <button type="submit">Ändern</button>
+  </form>
+</div>

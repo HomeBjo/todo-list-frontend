@@ -19,6 +19,8 @@ export class AllTodosComponent {
     title: '',
     my_field: false,
   };
+  editingTodo: any = null;
+  editingTodoIndex: number | null = null;
   constructor(private http: HttpClient) {}
 
   async ngOnInit() {
@@ -36,11 +38,10 @@ export class AllTodosComponent {
     
     ));
   }
+
   async createTodo() {
     const url = environment.baseUrl + '/todos/';
     // const token = localStorage.getItem('token');
-   
-    
     try {
       const newTodo = await lastValueFrom(this.http.post(url, this.newTodo));
       this.todos.push(newTodo); // Füge das neue Todo zur Liste hinzu
@@ -50,4 +51,35 @@ export class AllTodosComponent {
     }
   }
 
+  editTodo(index:any) {
+    // this.editingTodo = { ...todo }; // Clone the todo to avoid direct binding
+    // console.log('erstes',this.todos ,'zweitens',this.editingTodo )
+    this.editingTodoIndex = index;
+    this.editingTodo = { ...this.todos[index] }; // Erstelle eine Kopie des zu bearbeitenden Todos
+  }
+
+  async deleteTodo(id:any){
+    const url = `${environment.baseUrl}/todos/${id}/`;
+    try {
+      await lastValueFrom(this.http.delete(url));
+      this.todos = this.todos.filter((todo: any) => todo.id !== id); // Entferne das Todo aus der Liste
+    } catch (e) {
+      this.error = 'Fehler beim Löschen des Todo-Elements';
+    }
+  }
+
+
+  async updateTodo() {
+    if (this.editingTodoIndex !== null) {
+      const url = `${environment.baseUrl}/todos/${this.editingTodo.id}/`;
+      try {
+        const updatedTodo = await lastValueFrom(this.http.patch(url, this.editingTodo));
+        this.todos[this.editingTodoIndex] = updatedTodo;
+        this.editingTodo = null; // Beende den Bearbeitungsmodus
+        this.editingTodoIndex = null;
+      } catch (e) {
+        this.error = 'Fehler beim Aktualisieren des Todo-Elements';
+      }
+    }
+  }
 }
